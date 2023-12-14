@@ -1,0 +1,4 @@
+<manifest projecttype="ACCOUNTCUSTOMIZATION">
+  <projectname>JIRA - NetSuite Integration</projectname>
+  <frameworkversion>1.0</frameworkversion>
+</manifest>
