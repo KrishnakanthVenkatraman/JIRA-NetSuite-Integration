@@ -2,7 +2,7 @@
  * @NApiVersion 2.1
  * @NScriptType MapReduceScript
  */
-define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url','../Common Module/jj_cm_common_library.js'],
+define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Common Module/jj_cm_common_library.js'],
     /**
  * @param{config} config
  * @param{https} https
@@ -11,7 +11,7 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url','../Comm
  * @param{search} search
  * @param{url} url
  */
-    (config, https, log, record, search, url,jiraLib) => {
+    (config, https, log, record, search, url, jiraLib) => {
 
 
         /**
@@ -33,10 +33,24 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url','../Comm
             let isProd = jiraLib.isProduction();
             log.debug('Environment', isProd ? 'Production' : 'Non-Production');
 
-            let values =  jiraLib.getJiraApiInfo();
-            log.debug("the search values are :",values);
+            let values = jiraLib.getJiraApiInfo();
+            log.debug("the search values are :", values);
 
-            return values;
+            if (values.length > 0) {
+                let domainUrl = values[0].domainUrl;
+                let jiraTaskUrl = values[0].jiraTaskUrl;
+                let apiToken = values[0].apiToken;
+                let issueKey = jiraLib.extractStringFromURL(jiraTaskUrl);
+                let username = 'krishna.kanth998@gmail.com';
+
+                let jiraApiResponse = jiraLib.jiraApiRequest(username, apiToken, domainUrl, issueKey);
+                log.debug("JIRA API Response", jiraApiResponse);
+
+            }
+
+
+
+
         }
 
 
@@ -56,54 +70,54 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url','../Comm
          * @since 2015.2
          */
         const reduce = (reduceContext) => {
-        //     let mappedFields = JSON.parse(context.values[0]);
+            //     let mappedFields = JSON.parse(context.values[0]);
 
-        //       // Create "Project Task" in NetSuite
-        //       let taskId = createProjectTask(mappedFields);
-        //       log.debug('Project Task Created', 'ID: ' + taskId);
-        //   }
+            //       // Create "Project Task" in NetSuite
+            //       let taskId = createProjectTask(mappedFields);
+            //       log.debug('Project Task Created', 'ID: ' + taskId);
+            //   }
 
-        //   function getJiraIssues(domainUrl, apiToken, jiraTaskUrl) {
-        //     let headers = {
-        //         'Authorization': 'Basic ' + apiToken,
-        //         'Content-Type': 'application/json'
-        //     };
+            //   function getJiraIssues(domainUrl, apiToken, jiraTaskUrl) {
+            //     let headers = {
+            //         'Authorization': 'Basic ' + apiToken,
+            //         'Content-Type': 'application/json'
+            //     };
 
-        //     let response = https.get({
-        //         url: domainUrl + jiraTaskUrl, // Combine domain URL with the task URL
-        //         headers: headers
-        //     });
-        //     return JSON.parse(response.body).issues;
-        // }
+            //     let response = https.get({
+            //         url: domainUrl + jiraTaskUrl, // Combine domain URL with the task URL
+            //         headers: headers
+            //     });
+            //     return JSON.parse(response.body).issues;
+            // }
 
-        // function mapFields(jiraIssue) {
-        //     return {
-        //         title: jiraIssue.fields[''],
-        //         parent: jiraIssue.fields['customfield_10011'],
-        //         dueDate: jiraIssue.fields['customfield_10023'],
-        //         status: jiraIssue.fields['status'],
-        //         assignee:jiraIssue.fields['allocationresource'],
-        //         projecttask: jiraIssue.fields['project'],
-        //         startdate: jiraIssue.fields['customfield_10015'],
-        //         enddate: jiraIssue.fields['cus']
-        //     };
-        // }
-        // function createProjectTask(mappedFields) {
-        //     let projectTask = record.create({
-        //         type: 'projecttask',
-        //         isDynamic: true
-        //     });
+            // function mapFields(jiraIssue) {
+            //     return {
+            //         title: jiraIssue.fields[''],
+            //         parent: jiraIssue.fields['customfield_10011'],
+            //         dueDate: jiraIssue.fields['customfield_10023'],
+            //         status: jiraIssue.fields['status'],
+            //         assignee:jiraIssue.fields['allocationresource'],
+            //         projecttask: jiraIssue.fields['project'],
+            //         startdate: jiraIssue.fields['customfield_10015'],
+            //         enddate: jiraIssue.fields['cus']
+            //     };
+            // }
+            // function createProjectTask(mappedFields) {
+            //     let projectTask = record.create({
+            //         type: 'projecttask',
+            //         isDynamic: true
+            //     });
 
-        //     projectTask.setValue({ fieldId: 'name', value: mappedFields.name });
-        //     // Set other fields as necessary
+            //     projectTask.setValue({ fieldId: 'name', value: mappedFields.name });
+            //     // Set other fields as necessary
 
-        //     let taskId = projectTask.save();
-        //     return taskId;
+            //     let taskId = projectTask.save();
+            //     return taskId;
         }
 
 
 
 
-return { getInputData,reduce }
+        return { getInputData, reduce }
 
     });
