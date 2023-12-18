@@ -64,29 +64,38 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config','N/encode'],
         return splitString;
     }
 
-    function jiraApiRequest(username,apiToken, domainUrl, issueKey) {
+
+    function sendHttpGetRequest(url, headers) {
+        let response = https.get({ url: url, headers: headers });
+    
+        if (response.code === 200) {
+            return JSON.parse(response.body); // returns the parsed JSON body of the response
+        } else {
+            log.error('HTTP GET Request Error', response);
+            return null; // returns null to indicate an error occurred
+        }
+    }
+    
+    function createAuthorizationHeader(username, apiToken) {
         let encodedCredentials = encode.convert({
             string: username + ':' + apiToken,
             inputEncoding: encode.Encoding.UTF_8,
             outputEncoding: encode.Encoding.BASE_64
         });
-       
-        let headers = {
+    
+        return {
             "Authorization": "Basic " + encodedCredentials,
             "Content-Type": "application/json",
-            "Accept":"*/*",
-            "Accept-Encoding":"gzip, deflate, br"
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate, br"
         };
-
-        let response = https.get({
-            url: domainUrl + "/rest/api/3/issue/picker?currentIssueKey=" + issueKey,
-            headers: headers
-        });
-        log.debug("response",response);
-
-        // Handle the response
-        if (response.code === 200) {
-            let responseBody = JSON.parse(response.body);
+    }
+    function fetchProjectIssues(username, apiToken, domainUrl, issueKey) {
+        let headers = createAuthorizationHeader(username, apiToken);
+        let url = domainUrl + "/rest/api/3/issue/picker?currentIssueKey=" + issueKey;
+        let responseBody = sendHttpGetRequest(url, headers);
+    
+        if (responseBody) {
             var issues = responseBody.sections[0].issues.map(issue => {
                 return {
                     id: issue.id,
@@ -94,20 +103,31 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config','N/encode'],
                     summary: issue.summary
                 };
             });
-            log.debug("issues",issues);
-            return responseBody;
-        } else {
-            log.error('JIRA API Error', response);
-            return log;
+            log.debug("issues", issues);
         }
+    
+        return issues || []; // Return the issues or an empty array if an error occurred
     }
-   
+    
+    function fetchIssuedetails(username, apiToken, domainUrl, issueIdOrKey) {
+        let headers = createAuthorizationHeader(username, apiToken);
+        let url = domainUrl + "/rest/api/3/issue/" + issueIdOrKey + "?fields=*all";
+        let responseIssueBody = sendHttpGetRequest(url, headers);
+    
+        log.debug("issuebody", responseIssueBody);
+    
+        return responseIssueBody || {}; // Return the issue body or an empty object if an error occurred
+    }
+    
 
     return {
         getJiraApiInfo: getJiraApiInfo,
         isProduction: configFunction.isProduction,
         extractStringFromURL: extractStringFromURL,
-        jiraApiRequest: jiraApiRequest    
+        sendHttpGetRequest: sendHttpGetRequest,
+        createAuthorizationHeader: createAuthorizationHeader,
+        fetchProjectIssues: fetchProjectIssues,
+        fetchIssuedetails: fetchIssuedetails 
     }
 
 

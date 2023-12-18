@@ -43,8 +43,12 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
                 let issueKey = jiraLib.extractStringFromURL(jiraTaskUrl);
                 let username = 'krishna.kanth998@gmail.com';
 
-                let jiraApiResponse = jiraLib.jiraApiRequest(username, apiToken, domainUrl, issueKey);
-                log.debug("JIRA API Response", jiraApiResponse);
+                let projectIssues = jiraLib.fetchProjectIssues(username, apiToken, domainUrl, issueKey);
+               
+
+                let issueIdOrKey = "MP-1";
+                let issueDetails = jiraLib.fetchIssuedetails(username, apiToken, domainUrl, issueIdOrKey);
+               
 
             }
 
