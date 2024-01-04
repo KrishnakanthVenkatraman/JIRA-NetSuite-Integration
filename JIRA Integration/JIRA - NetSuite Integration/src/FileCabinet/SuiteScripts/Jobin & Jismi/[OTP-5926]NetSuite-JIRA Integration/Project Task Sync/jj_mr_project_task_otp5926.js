@@ -57,8 +57,20 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
                 log.debug("projectids", obj);
 
                
-                let projectIssues = jiraLib.fetchEpicIssues(username, apiToken, domainUrl);
-                log.debug("projectIssues", projectIssues);
+                let epicIssues = jiraLib.fetchEpicIssues(username, apiToken, domainUrl);
+                log.debug("epicIssues", epicIssues);
+
+                let taskIssues = jiraLib.fetchTaskIssues(username, apiToken, domainUrl);
+                log.debug("taskIssues", taskIssues);
+
+                let storyIssues = jiraLib.fetchStoryIssues(username, apiToken, domainUrl);
+                log.debug("storyIssues", storyIssues);
+
+                let bugIssues = jiraLib.fetchBugIssues(username, apiToken, domainUrl);
+                log.debug("bugIssues", bugIssues);
+
+                let subTaskIssues = jiraLib.fetchSubTaskIssues(username, apiToken, domainUrl);
+                log.debug("subTaskIssues", subTaskIssues);
 
 
                 let issueLastUpdated = jiraLib.lastUpdatedIssueDate(username, apiToken, domainUrl);

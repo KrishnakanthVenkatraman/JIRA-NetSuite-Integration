@@ -126,7 +126,7 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
 
 
         /**
-         * This function is used to fetch all the issues from a project using project ID
+         * This function is used to fetch all the Epic issues from a project 
          * @param {*} username 
          * @param {*} apiToken 
          * @param {*} domainUrl 
@@ -139,24 +139,72 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
             let responseBody = sendHttpGetRequest(url, headers);
             return responseBody;
         }
+        
 
-
-         /**
-         * This function is used to fetch all the issues from a project using project ID
-         * @param {*} username 
-         * @param {*} apiToken 
-         * @param {*} domainUrl 
-         * @param {*} ids 
-         * @returns 
+        
+        /**
+         * This function is used to fetch all the Task issues from a project 
+         *
+         * @param {*} username
+         * @param {*} apiToken
+         * @param {*} domainUrl
+         * @returns {*}
          */
-         function fetchProjectIssues(username, apiToken, domainUrl, ids) {
+        function fetchTaskIssues(username, apiToken, domainUrl) {
             let headers = createAuthorizationHeader(username, apiToken);
-            let url = domainUrl + "/rest/api/3/issue/picker?currentProjectId=" + ids;
+            let url = domainUrl + "/rest/api/3/search?jql=type = Task&fields=*all" ;
             let responseBody = sendHttpGetRequest(url, headers);
             return responseBody;
         }
 
+        
+        /**
+         * This function is used to fetch all the Story issues from a project 
+         *
+         * @param {*} username
+         * @param {*} apiToken
+         * @param {*} domainUrl
+         * @returns {*}
+         */
+        function s(username, apiToken, domainUrl) {
+            let headers = createAuthorizationHeader(username, apiToken);
+            let url = domainUrl + "/rest/api/3/search?jql=type = Story&fields=*all" ;
+            let responseBody = sendHttpGetRequest(url, headers);
+            return responseBody;
+        }
 
+        
+        /**
+         * This function is used to fetch all the Bug issues from a project 
+         *
+         * @param {*} username
+         * @param {*} apiToken
+         * @param {*} domainUrl
+         * @returns {*}
+         */
+        function fetchBugIssues(username, apiToken, domainUrl) {
+            let headers = createAuthorizationHeader(username, apiToken);
+            let url = domainUrl + "/rest/api/3/search?jql=type = Bug&fields=*all" ;
+            let responseBody = sendHttpGetRequest(url, headers);
+            return responseBody;
+        }
+
+        
+        /**
+         * This function is used to fetch all the SubTask issues from a project 
+         *
+         * @param {*} username
+         * @param {*} apiToken
+         * @param {*} domainUrl
+         * @returns {*}
+         */
+        function fetchSubTaskIssues(username, apiToken, domainUrl) {
+            let headers = createAuthorizationHeader(username, apiToken);
+            let url = domainUrl + "/rest/api/3/search?jql=type = Subtask&fields=*all" ;
+            let responseBody = sendHttpGetRequest(url, headers);
+            return responseBody;
+        }
+        
         
         /**
          * This function returns the last Updated date of the Issue in the Project.
@@ -258,8 +306,11 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
                 sendHttpGetRequest: sendHttpGetRequest,
                 createAuthorizationHeader: createAuthorizationHeader,
                 fetchProjects: fetchProjects,
-                fetchProjectIssues: fetchProjectIssues,
                 fetchEpicIssues: fetchEpicIssues,
+                fetchTaskIssues:fetchTaskIssues,
+                fetchStoryIssues: fetchStoryIssues,
+                fetchBugIssues: fetchBugIssues,
+                fetchSubTaskIssues: fetchSubTaskIssues,
                 lastUpdatedIssueDate: lastUpdatedIssueDate,
                 formatIssueUpdateTime: formatIssueUpdateTime,
                 issuesFromDate: issuesFromDate
