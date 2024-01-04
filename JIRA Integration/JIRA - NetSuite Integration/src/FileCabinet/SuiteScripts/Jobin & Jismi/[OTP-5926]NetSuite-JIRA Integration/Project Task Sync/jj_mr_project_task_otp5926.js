@@ -13,7 +13,6 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
  */
     (config, https, log, record, search, url, jiraLib) => {
 
-
         /**
          * Defines the function that is executed at the beginning of the map/reduce process and generates the input data.
          * @param {Object} inputContext
@@ -36,27 +35,50 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
             let values = jiraLib.getJiraApiInfo();
             log.debug("the search values are :", values);
 
+          
+
             if (values.length > 0) {
                 let domainUrl = values[0].domainUrl;
                 let jiraTaskUrl = values[0].jiraTaskUrl;
                 let apiToken = values[0].apiToken;
                 let issueKey = jiraLib.extractStringFromURL(jiraTaskUrl);
-                let username = 'krishna.kanth998@gmail.com';
+                let username = values[0].username;
+                log.debug('issueKey', issueKey);
 
-                let projectIssues = jiraLib.fetchProjectIssues(username, apiToken, domainUrl, issueKey);
-               
+                let project = jiraLib.fetchProjects(username, apiToken, domainUrl);
+                log.debug("project", project)
+                let obj = project.map(function (proj) {
+                    return {
+                        id: proj.id,
+                        key: proj.key
+                    }
 
-                let issueIdOrKey = "MP-1";
-                let issueDetails = jiraLib.fetchIssuedetails(username, apiToken, domainUrl, issueIdOrKey);
-               
+                });
+                log.debug("projectids", obj);
 
-            }
+                let ids = "10000";
+                let projectIssues = jiraLib.fetchEpicIssues(username, apiToken, domainUrl);
+                log.debug("projectIssues", projectIssues);
 
+                return projectIssues;
 
+        //         let issueIdOrKey = "MP-1";
+        //         let issueDetails = jiraLib.fetchIssuedetails(username, apiToken, domainUrl, issueIdOrKey);
 
+        //         let issueLastUpdated = jiraLib.lastUpdatedIssueDate(username, apiToken, domainUrl);
+        //         let formattedDateArray = issueLastUpdated.map(dateString => jiraLib.formatIssueUpdateTime(dateString));
+        //         log.debug("formattedDateArray", formattedDateArray);
 
-        }
+        //         let issuesForDate = jiraLib.issuesFromDate(username,apiToken, domainUrl,formattedDateArray);
+            
+        //         let customerValidate = jiraLib.customerRecord(issuesForDate);
+        //         log.debug("customerSearch",customerValidate);
 
+        //         return issuesForDate;
+
+        // }
+    }
+}
 
         /**
          * Defines the function that is executed when the reduce entry point is triggered. This entry point is triggered
@@ -74,54 +96,13 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
          * @since 2015.2
          */
         const reduce = (reduceContext) => {
-            //     let mappedFields = JSON.parse(context.values[0]);
+            let issueData = reduceContext.values[0];
+            log.debug("issueData", issueData);
 
-            //       // Create "Project Task" in NetSuite
-            //       let taskId = createProjectTask(mappedFields);
-            //       log.debug('Project Task Created', 'ID: ' + taskId);
-            //   }
+            // let testing = processProjectRecords(issueData);
+            // log.debug("testing",testing);
+        
 
-            //   function getJiraIssues(domainUrl, apiToken, jiraTaskUrl) {
-            //     let headers = {
-            //         'Authorization': 'Basic ' + apiToken,
-            //         'Content-Type': 'application/json'
-            //     };
-
-            //     let response = https.get({
-            //         url: domainUrl + jiraTaskUrl, // Combine domain URL with the task URL
-            //         headers: headers
-            //     });
-            //     return JSON.parse(response.body).issues;
-            // }
-
-            // function mapFields(jiraIssue) {
-            //     return {
-            //         title: jiraIssue.fields[''],
-            //         parent: jiraIssue.fields['customfield_10011'],
-            //         dueDate: jiraIssue.fields['customfield_10023'],
-            //         status: jiraIssue.fields['status'],
-            //         assignee:jiraIssue.fields['allocationresource'],
-            //         projecttask: jiraIssue.fields['project'],
-            //         startdate: jiraIssue.fields['customfield_10015'],
-            //         enddate: jiraIssue.fields['cus']
-            //     };
-            // }
-            // function createProjectTask(mappedFields) {
-            //     let projectTask = record.create({
-            //         type: 'projecttask',
-            //         isDynamic: true
-            //     });
-
-            //     projectTask.setValue({ fieldId: 'name', value: mappedFields.name });
-            //     // Set other fields as necessary
-
-            //     let taskId = projectTask.save();
-            //     return taskId;
         }
-
-
-
-
         return { getInputData, reduce }
-
     });
