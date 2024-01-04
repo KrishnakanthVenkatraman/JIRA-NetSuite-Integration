@@ -1,0 +1,47 @@
+<crmcustomfield scriptid="custevent_jj_task_id">
+  <accesslevel>2</accesslevel>
+  <appliesperkeyword>F</appliesperkeyword>
+  <appliestocampaign>F</appliestocampaign>
+  <appliestocase>F</appliestocase>
+  <appliestoevent>F</appliestoevent>
+  <appliestophonecall>F</appliestophonecall>
+  <appliestoprojecttask>T</appliestoprojecttask>
+  <appliestoresourceallocation>F</appliestoresourceallocation>
+  <appliestotask>F</appliestotask>
+  <applyformatting>F</applyformatting>
+  <availableexternally>F</availableexternally>
+  <checkspelling>F</checkspelling>
+  <defaultchecked>F</defaultchecked>
+  <defaultselection></defaultselection>
+  <defaultvalue></defaultvalue>
+  <description></description>
+  <displayheight></displayheight>
+  <displaytype>NORMAL</displaytype>
+  <displaywidth></displaywidth>
+  <dynamicdefault></dynamicdefault>
+  <encryptatrest>F</encryptatrest>
+  <fieldtype>TEXT</fieldtype>
+  <globalsearch>F</globalsearch>
+  <help>Displays the project task id.</help>
+  <isformula>F</isformula>
+  <ismandatory>F</ismandatory>
+  <isparent>F</isparent>
+  <label>Task ID</label>
+  <linktext></linktext>
+  <maxlength></maxlength>
+  <maxvalue></maxvalue>
+  <minvalue></minvalue>
+  <onparentdelete></onparentdelete>
+  <parentsubtab></parentsubtab>
+  <searchcomparefield></searchcomparefield>
+  <searchdefault></searchdefault>
+  <searchlevel>2</searchlevel>
+  <selectrecordtype></selectrecordtype>
+  <showhierarchy>F</showhierarchy>
+  <showinlist>F</showinlist>
+  <sourcefilterby></sourcefilterby>
+  <sourcefrom></sourcefrom>
+  <sourcelist></sourcelist>
+  <storevalue>T</storevalue>
+  <subtab>CRMMAIN</subtab>
+</crmcustomfield>
