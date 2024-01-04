@@ -157,23 +157,6 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
         }
 
 
-        /**
-         * This function is used to fetch all the field or issue details from an isuue by mentioning the issue key(1 issue per call)
-         * @param {*} username 
-         * @param {*} apiToken 
-         * @param {*} domainUrl 
-         * @param {*} issueIdOrKey 
-         * @returns 
-         */
-        function fetchIssuedetails(username, apiToken, domainUrl, issueIdOrKey) {
-            let headers = createAuthorizationHeader(username, apiToken);
-            let url = domainUrl + "/rest/api/3/issue/" + issueIdOrKey + "?fields=*all";
-            let responseIssueBody = sendHttpGetRequest(url, headers);
-            log.debug("issuebody", responseIssueBody);
-            return responseIssueBody || {}; // Return the issue body or an empty object if an error occurred
-        }
-
-
         
         /**
          * This function returns the last Updated date of the Issue in the Project.
@@ -256,15 +239,7 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
                             "projectKey": projectKey, "issuekey": issuekey, "formatDate": formatDate, "summary": summary, "parent": parent, "company": company, "assignee": assignee, "reporter": reporter, "statusName": statusConvert,
                             "originalEstimate": originalEstimate, "dueDate": dueDate, "startDate": startDate, "timeEstimate": timeEstimate
                         });
-                        // responses.forEach(function (response) {
-                        //     let comp = response.company;
-                        //     if (comp) {
-                        //         let customerExists = checkIfCustomerExists(comp);
-
-                        //         if (!customerExists) {
-                        //             createCustomerRecord(comp);
-                        //         }
-                        //     })
+                        
                     }
                 }
                 log.debug("responses", responses);
@@ -274,129 +249,7 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
 
 
 
-            // function processProjectRecords(projectIssues) {
-            //     projectIssues.forEach(issue => {
-            //         let projectKey = issue.projectKey;
-            //         log.debug("key", projectKey);
-
-            //         let projectSearch = search.create({
-            //             type: "job",
-            //             filters: [
-            //                 ['entityid', "is", projectKey]
-            //             ]
-            //         });
-            //         let searchResult = projectSearch.run().getRange({ start: 0, end: 1 });
-            //         log.debug("searchResult", searchResult);
-
-            //         if (searchResult.length > 0) {
-            //             let projectId = searchResult[0].id;
-            //             let projectRecord = record.load({
-            //                 type: record.Type.PROJECT_TASK,
-            //                 id: projectId
-            //             });
-            //             log.debug("the record is loaded");
-
-            //         } else {
-
-            //             let newProjectRecord = record.create({
-            //                 type: record.Type.PROJECT_TASK
-            //             });
-            //             newProjectRecord.setValue({ fieldId: 'entityid', value: projectKey || '' }); // Assuming summary is the task name
-            //             newProjectRecord.setValue({ fieldId: 'companyname', value: company || '' }); // Parent Name
-            //             newProjectRecord.setValue({ fieldId: 'startdate', value: startDate });  // Company Name
-            //             newProjectRecord.setValue({ fieldId: 'subsidiary', value: "11" || '' }); // Finish no later than
-            //             newProjectRecord.setValue({ filedId: 'status', value: statusConvert || '' });
-
-
-            //             let newRecordId = newProjectRecord.save();
-            //             log.debug("the record is created");
-
-            //         }
-            //     });
-            // }
-
-
-
-
-            // /**
-            //  * This function is used to display all the issues in the specific username irrespective of the projects.
-            //  * @param {*} username 
-            //  * @param {*} apiToken 
-            //  * @param {*} domainUrl 
-            //  * @returns 
-            //  */
-            // function issueSearch(username, apiToken, domainUrl) {
-            //     let headers = createAuthorizationHeader(username, apiToken);
-            //     let url = domainUrl + "/rest/api/3/search?startAt=0&maxResults=1000&fields=*all";
-            //     let responseIssueDetails = sendHttpGetRequest(url, headers);
-            //     // let allIssues = [];
-            //     // if (responseBody && responseBody.issues) {
-            //     //     let issues = responseIssueDetails.issues.map(issue => {
-            //     //         return {
-            //     //             id: issue.id,
-            //     //             key: issue.key,
-            //     //             summary: issue.fields.summary,
-            //     //             parent: issue.fields.parent.key,
-            //     //             projectID: issue.fields.project.id,
-            //     //             projectKey: issue.fields.project.key,
-            //     //             OriginalEstimate: issue.fields.aggregatetimeoriginalestimate,
-            //     //             assignee: issue.fields.assignee.emailAddress,
-            //     //             reporter: issue.fields.reporter.emailAddress,
-            //     //             dueDate: issue.fields.duedate,
-            //     //             startDate: issue.fields.customfield_10015,
-            //     //             timeEstimate: issue.fields.timeestimate,
-            //     //         };
-            //     //     });
-            //     //     allIssues = allIssues.concat(issues);
-
-            //         log.debug("issuedetails", responseIssueDetails);
-            //         // log.debug("allIssues", allIssues);
-
-            //         return responseIssueDetails || {};
-            // let statusConvert = "";
-            // if(statusName == 'To Do'){
-            //     statusConvert = "Not Started";
-            // }else if (statusName == 'In Progress' || 'In QA'){
-            //     statusConvert == 'In Progress';
-            // }else
-            //     statusConvert == 'Completed';
-
-            // log.debug("statusConvert", statusConvert);
-            // issueData.forEach(issue => {
-            //     try {
-            //         let newProject = record.create({ type:record.Type.JOB});
-            //         newProject.setValue({ fieldId: 'companyname', value: company});
-            //         newProject.setValue({ fieldId: 'entitystatus', value: statusNAme});
-            //         newProject.setValue({ fieldId: 'projectexpensetype', value: "1"});
-
-            //         let projectId = newProject.save();
-            //         log.debug('Project created','ID :'+ projectId);
-
-            //         let projectTask = record.create({ type: record.Type.PROJECT_TASK });
-
-
-            //         projectTask.setValue({ fieldId: 'title', value: summary || '' }); // Assuming summary is the task name
-            //         projectTask.setValue({ fieldId: 'parent', value: parent || '' }); // Parent Name
-            //         projectTask.setValue({ fieldId: 'company', value: company });  // Company Name
-            //         projectTask.setValue({ fieldId: 'enddate', value: dueDate || '' }); // Finish no later than
-            //         projectTask.setValue({ fieldId: 'assignee', value: assignee || '' }); // Resource
-            //         projectTask.setValue({ fieldId: 'requestedBy', value: reporter || '' }); // Requested By
-            //         projectTask.setValue({ fieldId: 'startdate', value: startDate || '' }); // Start Date
-            //         projectTask.setValue({ filedId: 'status', value: statusName || '' });
-            //         // projectTask.setValue({ fieldId: 'estimatedWork', value: timeoriginalestimate || '' }); // Estimated Work
-            //         // projectTask.setValue({ fieldId: 'actualWork', value: aggregatetimespent || '' }); // Actual Work
-            //         projectTask.setValue({ fieldId: 'remainingWork', value: timeestimate || '' }); // Remaining Work
-            //         // projectTask.setValue({ fieldId: 'project', value: project || '' }); // Project Name
-
-            //         // Save the record
-            //         let taskId = projectTask.save();
-            //         log.debug('Project Task Created', 'ID: ' + taskId);
-            //     } catch (e) {
-            //         log.error('Error creating project task', e.message);
-            //     }
-            // });
-            //     }
-
+            
 
             return {
                 getJiraApiInfo: getJiraApiInfo,
@@ -407,11 +260,10 @@ define(['N/https', 'N/record', 'N/search', 'N/log', 'N/config', 'N/encode'],
                 fetchProjects: fetchProjects,
                 fetchProjectIssues: fetchProjectIssues,
                 fetchEpicIssues: fetchEpicIssues,
-                fetchIssuedetails: fetchIssuedetails,
                 lastUpdatedIssueDate: lastUpdatedIssueDate,
                 formatIssueUpdateTime: formatIssueUpdateTime,
                 issuesFromDate: issuesFromDate
-                // processProjectRecords: processProjectRecords,
+         
         
             }
 

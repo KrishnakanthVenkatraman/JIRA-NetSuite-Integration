@@ -56,29 +56,23 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
                 });
                 log.debug("projectids", obj);
 
-                let ids = "10000";
+               
                 let projectIssues = jiraLib.fetchEpicIssues(username, apiToken, domainUrl);
                 log.debug("projectIssues", projectIssues);
 
-                return projectIssues;
 
-        //         let issueIdOrKey = "MP-1";
-        //         let issueDetails = jiraLib.fetchIssuedetails(username, apiToken, domainUrl, issueIdOrKey);
+                let issueLastUpdated = jiraLib.lastUpdatedIssueDate(username, apiToken, domainUrl);
+                let formattedDateArray = issueLastUpdated.map(dateString => jiraLib.formatIssueUpdateTime(dateString));
+                log.debug("formattedDateArray", formattedDateArray);
 
-        //         let issueLastUpdated = jiraLib.lastUpdatedIssueDate(username, apiToken, domainUrl);
-        //         let formattedDateArray = issueLastUpdated.map(dateString => jiraLib.formatIssueUpdateTime(dateString));
-        //         log.debug("formattedDateArray", formattedDateArray);
+                let issuesForDate = jiraLib.issuesFromDate(username,apiToken, domainUrl,formattedDateArray);           
 
-        //         let issuesForDate = jiraLib.issuesFromDate(username,apiToken, domainUrl,formattedDateArray);
-            
-        //         let customerValidate = jiraLib.customerRecord(issuesForDate);
-        //         log.debug("customerSearch",customerValidate);
+                return issuesForDate;
 
-        //         return issuesForDate;
-
-        // }
+        }
     }
-}
+
+
 
         /**
          * Defines the function that is executed when the reduce entry point is triggered. This entry point is triggered
@@ -96,12 +90,9 @@ define(['N/config', 'N/https', 'N/log', 'N/record', 'N/search', 'N/url', '../Com
          * @since 2015.2
          */
         const reduce = (reduceContext) => {
+
             let issueData = reduceContext.values[0];
             log.debug("issueData", issueData);
-
-            // let testing = processProjectRecords(issueData);
-            // log.debug("testing",testing);
-        
 
         }
         return { getInputData, reduce }
